@@ -10,6 +10,11 @@ import UIKit
 import AVFoundation
 
 class PreviewView: UIView {
+
+    // MARK: - Properties
+
+    var didTap: (() -> Void)?
+
 	var videoPreviewLayer: AVCaptureVideoPreviewLayer {
 		return layer as! AVCaptureVideoPreviewLayer
 	}
@@ -23,9 +28,7 @@ class PreviewView: UIView {
 		}
 	}
 
-    var didTap: (() -> Void)?
-	
-	// MARK: UIView
+	// MARK: - UIView
 	
     override class var layerClass: AnyClass {
 		return AVCaptureVideoPreviewLayer.self

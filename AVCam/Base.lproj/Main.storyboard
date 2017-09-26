@@ -100,6 +100,7 @@
                         <outlet property="identityLabel" destination="wTS-oo-aOB" id="h5f-HM-OMd"/>
                         <outlet property="percentLabel" destination="gZF-Yc-TM7" id="0IQ-fH-ovP"/>
                         <outlet property="previewView" destination="3eR-Rn-XpZ" id="e7I-nu-L6j"/>
+                        <outlet property="visualEffectView" destination="HuK-st-Iy7" id="j98-cV-Z7X"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

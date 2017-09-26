@@ -20,7 +20,69 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         case configurationFailed
     }
 
-    // MARK: - Properties
+    // MARK: - Interface
+
+    @IBOutlet private weak var percentLabel: UILabel!
+    @IBOutlet private weak var identityLabel: UILabel!
+    @IBOutlet private weak var previewView: PreviewView!
+    @IBOutlet private weak var visualEffectView: UIVisualEffectView!
+    
+    // MARK: - Formatters
+
+    private let percentFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 2
+        formatter.maximumIntegerDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter
+    }()
+
+    private let speechPercentFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        formatter.maximumIntegerDigits = 2
+        return formatter
+    }()
+
+    // MARK: - Vision Properties
+
+    let visionModel: VNCoreMLModel = {
+        let mobileNetModel = MobileNet.init().model
+        return try! VNCoreMLModel(for: mobileNetModel)
+    }()
+
+    lazy var visionRequest: VNCoreMLRequest = {
+        let request = VNCoreMLRequest(model: self.visionModel) { request, _ in
+            guard let results = request.results as? [VNClassificationObservation], let topResult = results.first else {
+                return
+            }
+            DispatchQueue.main.async {
+                if topResult.confidence > 0.3 {
+                    self.currentObject = topResult.identifier.components(separatedBy: ",").first?.capitalized
+                    self.currentConfidence = topResult.confidence
+                } else if topResult.confidence < 0.2 {
+                    self.currentObject = nil
+                    self.currentConfidence = nil
+                }
+
+                if let object = self.currentObject,
+                    let confidence = self.currentConfidence,
+                    let confidenceString = self.speechPercentFormatter.string(from: NSNumber(value: confidence)) {
+                    self.speechString = "\(object) \(confidenceString) Confident"
+                } else {
+                    self.speechString = "Not Sure"
+                }
+            }
+        }
+        request.imageCropAndScaleOption = .centerCrop
+        return request
+    }()
+
+    // MARK: - Detection Properties
+
+    private var currentFrame = 0
 
     private var currentObject: String? {
         didSet {
@@ -42,28 +104,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         }
     }
 
-    @IBOutlet private weak var percentLabel: UILabel!
-    @IBOutlet private weak var identityLabel: UILabel!
-    @IBOutlet private weak var previewView: PreviewView!
+    private var speechString = "Not Sure" {
+        didSet {
+            previewView.accessibilityLabel = speechString
+        }
+    }
 
-    private let percentFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.maximumFractionDigits = 2
-        formatter.maximumIntegerDigits = 2
-        formatter.minimumFractionDigits = 2
-        return formatter
-    }()
+    // MARK: - AVFoundation Properties
 
-    private let speechPercentFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.maximumFractionDigits = 0
-        formatter.maximumIntegerDigits = 2
-        return formatter
-    }()
-
-    private var isSessionRunning = false
     private let session = AVCaptureSession()
     private var setupResult: SessionSetupResult = .success
     private let sessionQueue = DispatchQueue(label: "session queue", attributes: [], target: nil)
@@ -75,28 +123,19 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
         UIApplication.shared.isIdleTimerDisabled = true
 
+        visualEffectView.accessibilityElementsHidden = true
+
         previewView.session = session
         previewView.didTap = {
-            let string: String
-            if let object = self.currentObject,
-                let confidence = self.currentConfidence,
-                let confidenceString = self.speechPercentFormatter.string(from: NSNumber(value: confidence)) {
-                string = "\(object) \(confidenceString) Confident"
-            } else {
-                string = "Not Sure"
+            guard !UIAccessibilityIsVoiceOverRunning() else {
+                return
             }
-
-            let utterance = AVSpeechUtterance(string: string)
-            utterance.rate = 0.65
+            let utterance = AVSpeechUtterance(string: self.speechString)
+            utterance.rate = 0.55
             let synthesizer = AVSpeechSynthesizer()
             synthesizer.speak(utterance)
         }
 
-        /*
-         Check video authorization status. Video access is required and audio
-         access is optional. If audio access is denied, audio is not recorded
-         during movie recording.
-         */
         switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
         case .authorized:
             // The user has previously granted access to the camera.
@@ -126,8 +165,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             switch self.setupResult {
             case .success:
                 self.session.startRunning()
-                self.isSessionRunning = self.session.isRunning
-
             case .notAuthorized:
                 DispatchQueue.main.async { [unowned self] in
                     let message = NSLocalizedString("AVCam doesn't have permission to use the camera, please change privacy settings", comment: "Alert message when the user has denied access to the camera")
@@ -139,7 +176,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
                     self.present(alertController, animated: true, completion: nil)
                 }
-
             case .configurationFailed:
                 DispatchQueue.main.async { [unowned self] in
                     let message = NSLocalizedString("Unable to capture media", comment: "Alert message when something goes wrong during capture session configuration")
@@ -156,16 +192,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         sessionQueue.async { [unowned self] in
             if self.setupResult == .success {
                 self.session.stopRunning()
-                self.isSessionRunning = self.session.isRunning
             }
         }
 
         super.viewWillDisappear(animated)
     }
 
-    // MARK: - Session Management
-
-    // Call this on the session queue.
     private func configureSession() {
         if setupResult != .success {
             return
@@ -207,38 +239,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         session.commitConfiguration()
     }
 
-    // MARK: - Vision
+    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
 
-    let visionModel: VNCoreMLModel = {
-        let mobileNetModel = MobileNet.init().model
-        return try! VNCoreMLModel(for: mobileNetModel)
-    }()
-
-    lazy var visionRequest: VNCoreMLRequest = {
-        let request = VNCoreMLRequest(model: self.visionModel) { request, _ in
-            guard let results = request.results as? [VNClassificationObservation], let topResult = results.first else {
-                return
-            }
-            DispatchQueue.main.async {
-                if topResult.confidence > 0.3 {
-                    self.currentObject = topResult.identifier.components(separatedBy: ",").first?.capitalized
-                    self.currentConfidence = topResult.confidence
-                } else if topResult.confidence < 0.2 {
-                    self.currentObject = nil
-                    self.currentConfidence = nil
-                }
-            }
-        }
-        request.imageCropAndScaleOption = .centerCrop
-        return request
-    }()
-
-    var currentFrame = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         currentFrame += 1
 
         // Updates so fast you can't read the confidence so skipping frames for readability.
-        guard currentFrame % 3 == 0 else {
+        guard currentFrame % 2 == 0 else {
+            currentFrame = currentFrame % 1000000
             return
         }
 
@@ -257,4 +265,3 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
 
 }
-
