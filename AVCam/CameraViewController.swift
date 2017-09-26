@@ -73,6 +73,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        UIApplication.shared.isIdleTimerDisabled = true
+
         previewView.session = session
         previewView.didTap = {
             let string: String
