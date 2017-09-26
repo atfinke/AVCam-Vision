@@ -234,6 +234,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     var currentFrame = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         currentFrame += 1
+
+        // Updates so fast you can't read the confidence so skipping frames for readability.
         guard currentFrame % 3 == 0 else {
             return
         }
