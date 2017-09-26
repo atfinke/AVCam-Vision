@@ -131,7 +131,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 		
 		do {
 			// Choose the back dual camera if available, otherwise default to a wide angle camera.
-			guard let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: AVMediaType.video, position: .back) else {
+			guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) else {
 				fatalError()
 			}
 
@@ -140,7 +140,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
             session.addOutput(videoOutput)
 
-			let videoDeviceInput = try AVCaptureDeviceInput(device: dualCameraDevice)
+			let videoDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
 			
 			if session.canAddInput(videoDeviceInput) {
 				session.addInput(videoDeviceInput)
