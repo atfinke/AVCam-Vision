@@ -144,6 +144,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 			
 			if session.canAddInput(videoDeviceInput) {
 				session.addInput(videoDeviceInput)
+                let connection = videoOutput.connection(with: .video)
+                connection?.videoOrientation = .portrait
 			} else {
 				print("Could not add video device input to the session")
 				setupResult = .configurationFailed
@@ -188,7 +190,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
     var currentFrame = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
         currentFrame += 1
         guard currentFrame % 3 == 0 else {
             return
