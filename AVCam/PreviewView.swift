@@ -22,10 +22,16 @@ class PreviewView: UIView {
 			videoPreviewLayer.session = newValue
 		}
 	}
+
+    var didTap: (() -> Void)?
 	
 	// MARK: UIView
 	
     override class var layerClass: AnyClass {
 		return AVCaptureVideoPreviewLayer.self
 	}
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        didTap?()
+    }
 }
