@@ -198,6 +198,10 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         super.viewWillDisappear(animated)
     }
 
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return true
+    }
+
     private func configureSession() {
         if setupResult != .success {
             return

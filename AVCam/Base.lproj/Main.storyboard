@@ -21,24 +21,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HuK-st-Iy7">
-                                        <rect key="frame" x="0.0" y="538" width="375" height="129"/>
+                                        <rect key="frame" x="0.0" y="557" width="375" height="110"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="kKK-jr-Mvu">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="129"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QCD-KZ-Ymk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="129"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="xMB-mk-0Ac">
-                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="129"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Not Clear" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="wTS-oo-aOB">
-                                                                <rect key="frame" x="8" y="8" width="359" height="65"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
-                                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gZF-Yc-TM7">
                                                                 <rect key="frame" x="8" y="68" width="359" height="21"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -46,7 +39,21 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Clear" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wTS-oo-aOB">
+                                                                <rect key="frame" x="20" y="15" width="335" height="48"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="48" id="5WI-85-REI"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstItem="wTS-oo-aOB" firstAttribute="top" secondItem="xMB-mk-0Ac" secondAttribute="top" constant="15" id="EEf-h8-wpy"/>
+                                                            <constraint firstAttribute="trailing" secondItem="wTS-oo-aOB" secondAttribute="trailing" constant="20" id="RDV-vA-xcj"/>
+                                                            <constraint firstItem="wTS-oo-aOB" firstAttribute="leading" secondItem="xMB-mk-0Ac" secondAttribute="leading" constant="20" id="jk8-zh-wAF"/>
+                                                        </constraints>
                                                     </view>
                                                     <vibrancyEffect>
                                                         <blurEffect style="dark"/>
@@ -56,7 +63,7 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="QCD-KZ-Ymk" firstAttribute="leading" secondItem="HuK-st-Iy7" secondAttribute="leading" id="Gny-PT-A7G"/>
-                                            <constraint firstAttribute="height" constant="129" id="HEY-1O-WGF"/>
+                                            <constraint firstAttribute="height" constant="110" id="HEY-1O-WGF"/>
                                             <constraint firstItem="QCD-KZ-Ymk" firstAttribute="top" secondItem="HuK-st-Iy7" secondAttribute="top" id="bGH-5q-Fef"/>
                                             <constraint firstAttribute="trailing" secondItem="QCD-KZ-Ymk" secondAttribute="trailing" id="h0G-WS-Yol"/>
                                             <constraint firstAttribute="bottom" secondItem="QCD-KZ-Ymk" secondAttribute="bottom" id="jQw-Bd-s1A"/>
