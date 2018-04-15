@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		142F82792082DD6A00F348AC /* CameraViewController+Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142F82782082DD6A00F348AC /* CameraViewController+Buffer.swift */; };
 		14802A4E1F78B980003B1017 /* MobileNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 14D3F7001F786C840026EAAB /* MobileNet.mlmodel */; };
 		7AA677151CFF765600B353FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA677141CFF765600B353FB /* AppDelegate.swift */; };
 		7AA677171CFF765600B353FB /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA677161CFF765600B353FB /* CameraViewController.swift */; };
@@ -17,8 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		142F82782082DD6A00F348AC /* CameraViewController+Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraViewController+Buffer.swift"; sourceTree = "<group>"; };
 		14D3F7001F786C840026EAAB /* MobileNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNet.mlmodel; sourceTree = "<group>"; };
-		7AA677111CFF765600B353FB /* AVCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AA677111CFF765600B353FB /* AVCapture + Vision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVCapture + Vision.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AA677141CFF765600B353FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AA677161CFF765600B353FB /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		7AA677191CFF765600B353FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -42,7 +44,7 @@
 		7AA677081CFF765500B353FB = {
 			isa = PBXGroup;
 			children = (
-				7AA677131CFF765600B353FB /* AVCam */,
+				7AA677131CFF765600B353FB /* AVCapture + Vision */,
 				7AA677121CFF765600B353FB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,32 +52,33 @@
 		7AA677121CFF765600B353FB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7AA677111CFF765600B353FB /* AVCam.app */,
+				7AA677111CFF765600B353FB /* AVCapture + Vision.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7AA677131CFF765600B353FB /* AVCam */ = {
+		7AA677131CFF765600B353FB /* AVCapture + Vision */ = {
 			isa = PBXGroup;
 			children = (
 				7AA677141CFF765600B353FB /* AppDelegate.swift */,
 				7AA677281CFF7B5C00B353FB /* PreviewView.swift */,
 				7AA677161CFF765600B353FB /* CameraViewController.swift */,
+				142F82782082DD6A00F348AC /* CameraViewController+Buffer.swift */,
 				14D3F7001F786C840026EAAB /* MobileNet.mlmodel */,
 				7AA677181CFF765600B353FB /* Main.storyboard */,
 				7AA6771B1CFF765600B353FB /* Assets.xcassets */,
 				7AA6771D1CFF765600B353FB /* LaunchScreen.storyboard */,
 				7AA677201CFF765600B353FB /* Info.plist */,
 			);
-			path = AVCam;
+			path = "AVCapture + Vision";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7AA677101CFF765500B353FB /* AVCam */ = {
+		7AA677101CFF765500B353FB /* AVCapture + Vision */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7AA677231CFF765600B353FB /* Build configuration list for PBXNativeTarget "AVCam" */;
+			buildConfigurationList = 7AA677231CFF765600B353FB /* Build configuration list for PBXNativeTarget "AVCapture + Vision" */;
 			buildPhases = (
 				7AA6770D1CFF765500B353FB /* Sources */,
 				7AA6770E1CFF765500B353FB /* Frameworks */,
@@ -85,9 +88,9 @@
 			);
 			dependencies = (
 			);
-			name = AVCam;
+			name = "AVCapture + Vision";
 			productName = AVCam;
-			productReference = 7AA677111CFF765600B353FB /* AVCam.app */;
+			productReference = 7AA677111CFF765600B353FB /* AVCapture + Vision.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +111,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7AA6770C1CFF765500B353FB /* Build configuration list for PBXProject "AVCam Swift" */;
+			buildConfigurationList = 7AA6770C1CFF765500B353FB /* Build configuration list for PBXProject "AVCapture + Vision" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -121,7 +124,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7AA677101CFF765500B353FB /* AVCam */,
+				7AA677101CFF765500B353FB /* AVCapture + Vision */,
 			);
 		};
 /* End PBXProject section */
@@ -146,6 +149,7 @@
 			files = (
 				14802A4E1F78B980003B1017 /* MobileNet.mlmodel in Sources */,
 				7AA677291CFF7B5C00B353FB /* PreviewView.swift in Sources */,
+				142F82792082DD6A00F348AC /* CameraViewController+Buffer.swift in Sources */,
 				7AA677171CFF765600B353FB /* CameraViewController.swift in Sources */,
 				7AA677151CFF765600B353FB /* AppDelegate.swift in Sources */,
 			);
@@ -284,10 +288,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 72S993BNAV;
-				INFOPLIST_FILE = AVCam/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AVCapture + Vision/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.AVCam";
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.avcapture.vision;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -301,10 +305,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 72S993BNAV;
-				INFOPLIST_FILE = AVCam/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AVCapture + Vision/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.AVCam";
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.avcapture.vision;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -315,7 +319,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7AA6770C1CFF765500B353FB /* Build configuration list for PBXProject "AVCam Swift" */ = {
+		7AA6770C1CFF765500B353FB /* Build configuration list for PBXProject "AVCapture + Vision" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7AA677211CFF765600B353FB /* Debug */,
@@ -324,7 +328,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7AA677231CFF765600B353FB /* Build configuration list for PBXNativeTarget "AVCam" */ = {
+		7AA677231CFF765600B353FB /* Build configuration list for PBXNativeTarget "AVCapture + Vision" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7AA677241CFF765600B353FB /* Debug */,
