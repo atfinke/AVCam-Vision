@@ -1,10 +1,10 @@
-/*
-	Copyright (C) 2016 Apple Inc. All Rights Reserved.
-	See LICENSE.txt for this sample’s licensing information
-	
-	Abstract:
-	Application preview view.
-*/
+//
+//  PreviewView.swift
+//  AVCapture + Vision
+//
+//  Created by Andrew Finke on 9/26/17.
+//  Copyright © 2018 Andrew Finke. All rights reserved.
+//
 
 import UIKit
 import AVFoundation

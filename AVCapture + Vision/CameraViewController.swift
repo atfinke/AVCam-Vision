@@ -1,16 +1,16 @@
-/*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
-
- Abstract:
- View controller for camera interface.
- */
+//
+//  CameraViewController.swift
+//  AVCapture + Vision
+//
+//  Created by Andrew Finke on 9/26/17.
+//  Copyright © 2018 Andrew Finke. All rights reserved.
+//
 
 import UIKit
 import Vision
 import AVFoundation
 
-class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class CameraViewController: UIViewController {
 
     // MARK: - Types
 
@@ -32,15 +32,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private let percentFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
-        formatter.maximumFractionDigits = 2
-        formatter.maximumIntegerDigits = 2
-        formatter.minimumFractionDigits = 2
-        return formatter
-    }()
-
-    private let speechPercentFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
         formatter.maximumFractionDigits = 0
         formatter.maximumIntegerDigits = 2
         return formatter
@@ -50,11 +41,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
     let visionModel: VNCoreMLModel = {
         let mobileNetModel = MobileNet.init().model
-        return try! VNCoreMLModel(for: mobileNetModel)
+        guard let visionModel = try? VNCoreMLModel(for: mobileNetModel) else {
+            fatalError()
+        }
+        return visionModel
     }()
 
     lazy var visionRequest: VNCoreMLRequest = {
-        let request = VNCoreMLRequest(model: self.visionModel) { request, _ in
+        let request = VNCoreMLRequest(model: visionModel) { request, _ in
             guard let results = request.results as? [VNClassificationObservation], let topResult = results.first else {
                 return
             }
@@ -69,10 +63,10 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
                 if let object = self.currentObject,
                     let confidence = self.currentConfidence,
-                    let confidenceString = self.speechPercentFormatter.string(from: NSNumber(value: confidence)) {
-                    self.speechString = "\(object) \(confidenceString) Confident"
+                    let confidenceString = self.percentFormatter.string(from: NSNumber(value: confidence)) {
+                    self.speechString = "\(object). \(confidenceString) Confident"
                 } else {
-                    self.speechString = "Not Sure"
+                    self.speechString = "Not Sure."
                 }
             }
         }
@@ -81,8 +75,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }()
 
     // MARK: - Detection Properties
-
-    private var currentFrame = 0
 
     private var currentObject: String? {
         didSet {
@@ -122,7 +114,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         super.viewDidLoad()
 
         UIApplication.shared.isIdleTimerDisabled = true
-
         visualEffectView.accessibilityElementsHidden = true
 
         previewView.session = session
@@ -136,20 +127,18 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             synthesizer.speak(utterance)
         }
 
-        switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             // The user has previously granted access to the camera.
             break
-
         case .notDetermined:
             sessionQueue.suspend()
-            AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { [unowned self] granted in
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [unowned self] granted in
                 if !granted {
                     self.setupResult = .notAuthorized
                 }
                 self.sessionQueue.resume()
             })
-
         default:
             setupResult = .notAuthorized
         }
@@ -167,22 +156,11 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                 self.session.startRunning()
             case .notAuthorized:
                 DispatchQueue.main.async { [unowned self] in
-                    let message = NSLocalizedString("AVCam doesn't have permission to use the camera, please change privacy settings", comment: "Alert message when the user has denied access to the camera")
-                    let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil))
-                    alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"), style: .`default`, handler: { action in
-                        UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
-                    }))
-
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showAlert(title: "Not Authorized", message: "AVCam doesn't have permission to use the camera")
                 }
             case .configurationFailed:
                 DispatchQueue.main.async { [unowned self] in
-                    let message = NSLocalizedString("Unable to capture media", comment: "Alert message when something goes wrong during capture session configuration")
-                    let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil))
-
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showAlert(title: "Configuration Failed", message: "Unable to capture media")
                 }
             }
         }
@@ -194,12 +172,28 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                 self.session.stopRunning()
             }
         }
-
         super.viewWillDisappear(animated)
     }
 
     override func prefersHomeIndicatorAutoHidden() -> Bool {
         return true
+    }
+
+    // MARK: - Helpers
+
+    private func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+
+        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"), style: .default, handler: { _ in
+            guard let url = URL(string: UIApplicationOpenSettingsURLString) else { fatalError() }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        })
+        alertController.addAction(settingsAction)
+
+        present(alertController, animated: true, completion: nil)
     }
 
     private func configureSession() {
@@ -243,29 +237,5 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         session.commitConfiguration()
     }
 
-    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
-
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        currentFrame += 1
-
-        // Updates so fast you can't read the confidence so skipping frames for readability.
-        guard currentFrame % 2 == 0 else {
-            currentFrame = currentFrame % 1000000
-            return
-        }
-
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            return
-        }
-
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                try handler.perform([self.visionRequest])
-            } catch {
-                print(error)
-            }
-        }
-    }
-
+    
 }
